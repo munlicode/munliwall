@@ -6,7 +6,7 @@ const MONOREPO_ROOT = path.resolve(__dirname, '../../');
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [externalizeDepsPlugin({ exclude: ['@munlicode/munliwall-core', 'conf'] })],
     build: {
       outDir: 'dist/main',
       rollupOptions: {

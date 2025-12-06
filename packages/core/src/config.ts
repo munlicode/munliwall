@@ -43,7 +43,6 @@ type SettingValueType<U extends SettingMeta['type']> =
 
 interface ObjectSettingMeta extends SettingMetaBase {
   type: 'object'
-  // 💡 FIX: Changed from SettingMetaBase to the full SettingMeta union
   properties: Record<string, SettingMeta> 
 }
 

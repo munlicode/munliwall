@@ -186,18 +186,36 @@ importers:
 
   packages/desktop-app:
     dependencies:
-      '@electron-toolkit/preload':
-        specifier: ^3.0.2
-        version: 3.0.2(electron@38.5.0)
-      '@electron-toolkit/utils':
-        specifier: ^4.0.0
-        version: 4.0.0(electron@38.5.0)
       '@munlicode/munliwall-core':
-        specifier: workspace:^1.0.0
+        specifier: file:../core
         version: link:../core
+      axios:
+        specifier: ^1.13.1
+        version: 1.13.1
+      conf:
+        specifier: ^15.0.2
+        version: 15.0.2
       electron-updater:
         specifier: ^6.3.9
         version: 6.6.2
+      image-size:
+        specifier: ^2.0.2
+        version: 2.0.2
+      lowdb:
+        specifier: ^7.0.1
+        version: 7.0.1
+      nekosapi:
+        specifier: ^0.7.0
+        version: 0.7.0
+      screen-resolution:
+        specifier: ^1.0.0
+        version: 1.0.0
+      sharp:
+        specifier: ^0.34.4
+        version: 0.34.4
+      wallpaper:
+        specifier: ^7.2.1
+        version: 7.2.1
     devDependencies:
       '@electron-toolkit/eslint-config-prettier':
         specifier: ^3.0.0
@@ -558,20 +576,10 @@ packages:
       typescript:
         optional: true
 
-  '@electron-toolkit/preload@3.0.2':
-    resolution: {integrity: sha512-TWWPToXd8qPRfSXwzf5KVhpXMfONaUuRAZJHsKthKgZR/+LqX1dZVSSClQ8OTAEduvLGdecljCsoT2jSshfoUg==}
-    peerDependencies:
-      electron: '>=13.0.0'
-
   '@electron-toolkit/tsconfig@2.0.0':
     resolution: {integrity: sha512-AdPsP770WhW7b260h13SHMdmjEEHJL6xFtgi3jwgdsSQbJOkJLeNnnpZW9qxTPCvmRI6vmdzWz5K3gibFS6SNg==}
     peerDependencies:
       '@types/node': '*'
-
-  '@electron-toolkit/utils@4.0.0':
-    resolution: {integrity: sha512-qXSntwEzluSzKl4z5yFNBknmPGjPa3zFhE4mp9+h0cgokY5ornAeP+CJQDBhKsL1S58aOQfcwkD3NwLZCl+64g==}
-    peerDependencies:
-      electron: '>=13.0.0'
 
   '@electron/asar@3.4.1':
     resolution: {integrity: sha512-i4/rNPRS84t0vSRa2HorerGRXWyF4vThfHesw0dmcWHp+cspK743UanA0suA5Q5y8kzY2y6YKrvbIUn69BCAiA==}
@@ -6134,17 +6142,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@electron-toolkit/preload@3.0.2(electron@38.5.0)':
-    dependencies:
-      electron: 38.5.0
-
   '@electron-toolkit/tsconfig@2.0.0(@types/node@22.18.13)':
     dependencies:
       '@types/node': 22.18.13
-
-  '@electron-toolkit/utils@4.0.0(electron@38.5.0)':
-    dependencies:
-      electron: 38.5.0
 
   '@electron/asar@3.4.1':
     dependencies:

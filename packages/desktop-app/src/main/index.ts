@@ -19,7 +19,9 @@ const currentDir = __dirname;
 const projectRoot = path.join(currentDir, '../../../../');
 
 
-dotenv.config({ path: path.join(projectRoot, '.env') });
+if (process.env.NODE_ENV === 'development') {
+  dotenv.config({ path: path.join(projectRoot, '.env') });
+}
 const preloadPath = path.join(__dirname, '../preload/index.js');
 
 function createWindow() {
@@ -35,7 +37,7 @@ function createWindow() {
     console.info("Starting Dev Sever")
     win.loadURL(process.env.VITE_DEV_SERVER_URL!);
   } else {
-    console.info("Starting Production Sever")
+    console.info("Starting Production Server")
     win.loadFile(path.join(currentDir, '../renderer/index.html'));
   }
 }

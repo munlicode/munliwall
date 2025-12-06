@@ -18,13 +18,18 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && node copy_core.js && electron-builder --linux"
+    "build:linux": "node build-linux.js"
   },
   "dependencies": {
-    "@munlicode/munliwall-core": "workspace:^1.0.0",
-    "@electron-toolkit/preload": "^3.0.2",
-    "@electron-toolkit/utils": "^4.0.0",
-    "electron-updater": "^6.3.9"
+    "axios": "^1.13.1",
+    "conf": "^15.0.2",
+    "electron-updater": "^6.3.9",
+    "image-size": "^2.0.2",
+    "lowdb": "^7.0.1",
+    "nekosapi": "^0.7.0",
+    "screen-resolution": "^1.0.0",
+    "sharp": "^0.34.4",
+    "wallpaper": "^7.2.1"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",

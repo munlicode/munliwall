@@ -13,5 +13,10 @@
     ],
     "outDir": "dist/main",
     "noEmit": false
-  }
+  },
+  "references": [
+    {
+      "path": "../core"
+    }
+  ]
 }

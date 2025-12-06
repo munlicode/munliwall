@@ -4,27 +4,24 @@ directories:
   buildResources: build
 files:
   - dist/**
+  - "!**/*.map"
   - "!**/.vscode/*"
   - "!src/*"
   - "!electron.vite.config.{js,ts,mjs,cjs}"
   - "!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}"
   - "!{.env,.env.*,.npmrc,pnpm-lock.yaml}"
   - "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
-extraFiles:
-  # This tells the builder to take the compiled JS files from 'core/dist'
-  # and place them directly into the 'desktop-app' structure for packaging.
-  - from: ../core/dist
-    to: node_modules/core/dist # Or wherever your app expects the files to be referenced from
-    filter:
-      - "**/*.js"
-      - "!**/*.map"
+  - "!node_modules/@munlicode/munliwall-core"
 asarUnpack:
+  - "**/node_modules/sharp/**/*"
+  - "**/node_modules/@img/**/*"
+  - "**/node_modules/wallpaper/**/*"
 extraResources:
-  - from: ../core/dist/config.js
+  - from: dist/core/config.js
     to: core/config.js
 
   - resources/**
-executableName: MunliWall
+executableName: munliwall
 win:
   executableName: MunliWall
 nsis:
@@ -49,7 +46,13 @@ linux:
     - deb
   maintainer: electronjs.org
   category: Utility
+  desktop:
+    StartupNotify: "true"
 appImage:
+  artifactName: ${productName}-${version}.${ext}
+snap:
+  artifactName: ${productName}-${version}.${ext}
+deb:
   artifactName: ${productName}-${version}.${ext}
 npmRebuild: false
 publish:

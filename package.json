@@ -12,6 +12,7 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules pnpm jest",
     "clean": "rimraf packages/*/dist packages/*/tsconfig.tsbuildinfo",
     "desktop:start": "pnpm --filter @munlicode/munliwall-desktop start",
+    "desktop:build:linux": "pnpm --filter @munlicode/munliwall-desktop build:linux",
     "desktop:package": "pnpm --filter @munlicode/munliwall-desktop package",
     "desktop:make": "pnpm --filter @munlicode/munliwall-desktop make",
     "desktop:publish": "pnpm --filter @munlicode/munliwall-desktop publish"
