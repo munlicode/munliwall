@@ -22,36 +22,34 @@ extraResources:
 
   - resources/**
 executableName: munliwall
-win:
-  executableName: MunliWall
-nsis:
-  artifactName: ${name}-${version}-setup.${ext}
-  shortcutName: ${productName}
-  uninstallDisplayName: ${productName}
-  createDesktopShortcut: always
-mac:
-  entitlementsInherit: build/entitlements.mac.plist
-  extendInfo:
-    - NSCameraUsageDescription: Application requests access to the device's camera.
-    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
-    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
-    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
-  notarize: false
-dmg:
-  artifactName: ${name}-${version}.${ext}
+
 linux:
   target:
     - AppImage
     - snap
     - deb
-  maintainer: electronjs.org
+  maintainer: Nurzhan Murakhan <nurzhanmuratkhan@gmail.com>
+  synopsis: Desktop Wallpaper Application Suite
+  description: A simple yet powerful tool to transform your workspace.
   category: Utility
+  icon: build/icon.png
   desktop:
     StartupNotify: "true"
 appImage:
   artifactName: ${productName}-${version}.${ext}
 snap:
   artifactName: ${productName}-${version}.${ext}
+  confinement: strict
+  grade: stable
+  plugs:
+    - default
+    - desktop
+    - desktop-legacy
+    - home
+    - removable-media
+    - network
+    - unity7
+    - wayland
 deb:
   artifactName: ${productName}-${version}.${ext}
 npmRebuild: false
