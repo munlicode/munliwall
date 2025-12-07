@@ -1,5 +1,5 @@
 appId: com.munlicode.munliwall
-productName: MunliWall
+productName: munliwall
 directories:
   buildResources: build
 files:
@@ -55,6 +55,7 @@ snap:
       repo: munliwall
 deb:
   artifactName: ${productName}-${version}.${ext}
+  afterInstall: build/after-install.sh
 npmRebuild: false
 publish:
   provider: github

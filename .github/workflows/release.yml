@@ -70,7 +70,7 @@ jobs:
           allowUpdates: true
           # electron-builder uploads AppImage and Deb. Add Snap and CLI zip here.
           artifacts: |
-            dist/MunliWall-*-x64.snap # Adjust if artifactName differs
+            dist/munliwall-*-x64.snap # Adjust if artifactName differs
             artifacts/cli.zip
           token: ${{ secrets.GITHUB_TOKEN }}
           omitBodyDuringUpdate: true
