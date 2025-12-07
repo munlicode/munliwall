@@ -50,6 +50,10 @@ snap:
     - network
     - unity7
     - wayland
+  publish:
+    provider: github
+    owner: munlicode
+    repo: munliwall
 deb:
   artifactName: ${productName}-${version}.${ext}
 npmRebuild: false
