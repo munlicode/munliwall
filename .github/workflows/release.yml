@@ -37,7 +37,7 @@ jobs:
         run: pnpm --filter @munlicode/munliwall-core run build
 
       # ------------------------------
-      # Build & Publish Desktop App (AppImage and Deb)
+      # Build & Publish Desktop App (AppImage, Deb)
       # ------------------------------
       - name: Build and Publish Desktop App (Linux - AppImage, Deb)
         env:
@@ -49,16 +49,16 @@ jobs:
       # ------------------------------
       # Build CLI (Optional / Secondary)
       # ------------------------------
-      - name: Build CLI
-        run: pnpm --filter @munlicode/munliwall-cli run build
-
-      - name: Package CLI
+      # Note: We don't run 'build' explicitly here because 'dist' script runs 'build' which runs esbuild.
+      - name: Build and Package CLI
         run: pnpm --filter @munlicode/munliwall-cli run dist
 
       - name: Zip CLI Artifacts
         run: |
           mkdir -p artifacts
-          zip -r artifacts/cli.zip packages/cli/dist
+          cd packages/cli/dist
+          # Zip only the binaries, flattening the structure
+          zip -r ../../../artifacts/cli.zip munliwall-cli-*
 
       # ------------------------------
       # Upload Snap and CLI Artifacts to Release
@@ -70,7 +70,7 @@ jobs:
           allowUpdates: true
           # electron-builder uploads AppImage and Deb. Add Snap and CLI zip here.
           artifacts: |
-            dist/munliwall-*-x64.snap # Adjust if artifactName differs
+            dist/munliwall-*-x64.snap
             artifacts/cli.zip
           token: ${{ secrets.GITHUB_TOKEN }}
           omitBodyDuringUpdate: true
