@@ -43,8 +43,8 @@ export class LocalSource implements ISource {
       source: this.name,
       author: 'Unknown', // Author is generally not available for local files
       tags: [folderPath.split(sep).pop() || 'local'], // Use folder name as a tag
-      width: metadata.width,
-      height: metadata.height,
+      width: metadata.width ?? 0,
+      height: metadata.height ?? 0,
     };
   }
 }
