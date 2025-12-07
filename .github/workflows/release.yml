@@ -34,7 +34,7 @@ jobs:
       # Build Core package
       # ------------------------------
       - name: Build Core Package
-        run: pnpm --filter core run build
+        run: pnpm --filter @munlicode/munliwall-core run build
 
       # ------------------------------
       # Build & Publish Desktop App
@@ -42,27 +42,21 @@ jobs:
       - name: Build and Publish Desktop App (Linux)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm --filter desktop-app run release:linux
+        run: pnpm --filter @munlicode/munliwall-desktop run release:linux
 
       # ------------------------------
       # Build CLI (Optional / Secondary)
       # ------------------------------
       - name: Build CLI
-        run: pnpm --filter cli run build
+        run: pnpm --filter @munlicode/munliwall-cli run build
 
       - name: Package CLI
-        run: pnpm --filter cli run dist
-
-      - name: List CLI directory (Debug)
-        run: |
-          ls -la packages/cli
-          ls -la packages/cli/dist || echo "dist dir not found"
+        run: pnpm --filter @munlicode/munliwall-cli run dist
 
       - name: Zip CLI Artifacts
         run: |
           mkdir -p artifacts
-          cd packages/cli
-          zip -r ../../artifacts/cli.zip dist
+          zip -r artifacts/cli.zip packages/cli/dist
 
       # ------------------------------
       # Upload CLI Artifacts to Release
