@@ -43,30 +43,50 @@ You can download the latest version of the desktop application from the [Release
 
 The CLI tool allows you to manage wallpapers directly from your terminal.
 
-1.  Download `cli.zip` from the Releases page.
-2.  Unzip the archive:
+1.  **Download `cli.zip`** from the [Releases](https://github.com/munlicode/munliwall/releases) page.
+2.  **Unzip the archive**:
     ```bash
     unzip cli.zip
     ```
-3.  Navigate to the `dist` directory.
-4.  Run the CLI:
+    This will extract the executable binaries directly into your current directory. You will find files like `munliwall-cli-linux`, `munliwall-cli-macos`, and `munliwall-cli-win.exe`.
+3.  **Make Executable (Linux/macOS)**:
     ```bash
-    ./munliwall --help
+    chmod +x munliwall-cli-linux # or munliwall-cli-macos
     ```
+4.  **Run It**:
+    ```bash
+    ./munliwall-cli-linux --help # or the relevant binary for your OS
+    ```
+
+#### For Convenience (Optional)
+
+To make the CLI tool easier to use from any directory, you can rename the binary and move it to a directory included in your system's `PATH` (e.g., `/usr/local/bin` on Linux/macOS):
+
+```bash
+# Rename the binary
+mv munliwall-cli-linux munliwall # Replace with your OS's binary name if not Linux
+
+# Move to a directory in your PATH (requires administrator/root privileges)
+sudo mv munliwall /usr/local/bin/
+```
+Now you can simply type `munliwall` in any terminal to run the CLI:
+```bash
+munliwall --help
+```
 
 **Example Commands:**
 
 *   **Set a random wallpaper:**
     ```bash
-    ./munliwall random
+    munliwall random
     ```
 *   **Set a wallpaper from a specific source (e.g., Unsplash):**
     ```bash
-    ./munliwall set --source unsplash --query "nature"
+    munliwall set --source unsplash --query "nature"
     ```
 *   **List history:**
     ```bash
-    ./munliwall history
+    munliwall history
     ```
 
 ## Development
