@@ -53,10 +53,16 @@ jobs:
       - name: Package CLI
         run: pnpm --filter cli run dist
 
+      - name: List CLI directory (Debug)
+        run: |
+          ls -la packages/cli
+          ls -la packages/cli/dist || echo "dist dir not found"
+
       - name: Zip CLI Artifacts
         run: |
           mkdir -p artifacts
-          zip -r artifacts/cli.zip packages/cli/dist
+          cd packages/cli
+          zip -r ../../artifacts/cli.zip dist
 
       # ------------------------------
       # Upload CLI Artifacts to Release
