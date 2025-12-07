@@ -4,6 +4,9 @@ const path = require('path');
 
 const pkgPath = path.resolve(__dirname, 'package.json');
 
+// Capture additional arguments passed to the script (e.g., --publish always)
+const args = process.argv.slice(2).join(' ');
+
 try {
   // 1. Build
   console.log('Running electron-vite build...');
@@ -29,8 +32,8 @@ try {
 
   try {
     // 4. Pack
-    console.log('Running electron-builder --linux...');
-    execSync('npx electron-builder --linux', { stdio: 'inherit', cwd: __dirname });
+    console.log(`Running electron-builder --linux ${args}...`);
+    execSync(`npx electron-builder --linux ${args}`, { stdio: 'inherit', cwd: __dirname });
   } catch (e) {
     console.error('Build failed.');
     throw e;

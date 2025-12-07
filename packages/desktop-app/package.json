@@ -22,6 +22,7 @@
     "release:linux": "node build-linux.js --publish always"
   },
   "dependencies": {
+    "@munlicode/munliwall-core": "workspace:*",
     "axios": "^1.13.1",
     "conf": "^15.0.2",
     "electron-updater": "^6.3.9",
