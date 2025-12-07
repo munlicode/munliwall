@@ -9,7 +9,10 @@
   },
   "pkg": {
     "scripts": "dist/cli.js",
-    "assets": [],
+    "assets": [
+      "node_modules/sharp/**/*",
+      "../../node_modules/sharp/**/*"
+    ],
     "outputPath": "dist"
   },
   "scripts": {
