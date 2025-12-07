@@ -26,7 +26,6 @@ executableName: munliwall
 linux:
   target:
     - AppImage
-    - snap
     - deb
   maintainer: Nurzhan Murakhan <nurzhanmuratkhan@gmail.com>
   synopsis: Desktop Wallpaper Application Suite

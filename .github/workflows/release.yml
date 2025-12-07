@@ -37,11 +37,13 @@ jobs:
         run: pnpm --filter @munlicode/munliwall-core run build
 
       # ------------------------------
-      # Build & Publish Desktop App
+      # Build & Publish Desktop App (AppImage and Deb)
       # ------------------------------
-      - name: Build and Publish Desktop App (Linux)
+      - name: Build and Publish Desktop App (Linux - AppImage, Deb)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Note: We removed 'snap' from linux.target in electron-builder.yml to prevent Snap Store publishing attempts.
+        # The snap artifact will be built but not published by electron-builder.
         run: pnpm --filter @munlicode/munliwall-desktop run release:linux
 
       # ------------------------------
@@ -59,16 +61,17 @@ jobs:
           zip -r artifacts/cli.zip packages/cli/dist
 
       # ------------------------------
-      # Upload CLI Artifacts to Release
+      # Upload Snap and CLI Artifacts to Release
       # ------------------------------
-      # This step uploads the CLI zip to the release created/managed by electron-builder.
-      # using softprops/action-gh-release (or similar) or reusing ncipollo but verifying it doesn't overwrite
-      - name: Upload CLI to Release
+      - name: Upload Snap and CLI to Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.ref_name }}
           allowUpdates: true
-          artifacts: artifacts/cli.zip
+          # electron-builder uploads AppImage and Deb. Add Snap and CLI zip here.
+          artifacts: |
+            dist/MunliWall-*-x64.snap # Adjust if artifactName differs
+            artifacts/cli.zip
           token: ${{ secrets.GITHUB_TOKEN }}
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
