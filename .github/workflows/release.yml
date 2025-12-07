@@ -1,9 +1,9 @@
-name: Build and Release Monorepo
+name: Build and Release
 
 on:
   push:
     tags:
-      - "v*.*.*" # triggers on semantic version tags like v1.0.0
+      - "v*.*.*"
 
 permissions:
   contents: write
@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Snapcraft
+        run: sudo snap install snapcraft --classic
+
       # ------------------------------
       # Build Core package
       # ------------------------------
@@ -34,19 +37,15 @@ jobs:
         run: pnpm --filter core run build
 
       # ------------------------------
-      # Build Desktop App
+      # Build & Publish Desktop App
       # ------------------------------
-      - name: Build Desktop App
-        run: pnpm --filter desktop-app run build
-
-      - name: List Desktop App dist for debugging
-        run: ls -R packages/desktop-app/dist
-
-      - name: Package Desktop App
-        run: pnpm --filter desktop-app run dist
+      - name: Build and Publish Desktop App (Linux)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm --filter desktop-app run release:linux
 
       # ------------------------------
-      # Build CLI
+      # Build CLI (Optional / Secondary)
       # ------------------------------
       - name: Build CLI
         run: pnpm --filter cli run build
@@ -54,43 +53,22 @@ jobs:
       - name: Package CLI
         run: pnpm --filter cli run dist
 
-      # ------------------------------
-      # Compress Artifacts for Release
-      # ------------------------------
-      - name: Compress artifacts
+      - name: Zip CLI Artifacts
         run: |
           mkdir -p artifacts
-          zip -r artifacts/core.zip packages/core/dist
-          zip -r artifacts/desktop-app.zip packages/desktop-app/release
           zip -r artifacts/cli.zip packages/cli/dist
 
       # ------------------------------
-      # Upload Artifacts (for debugging)
+      # Upload CLI Artifacts to Release
       # ------------------------------
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: all-artifacts
-          path: artifacts/*.zip
-
-      # ------------------------------
-      # Download Package Artifacts (optional)
-      # ------------------------------
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: all-artifacts
-          path: all-artifacts
-
-      # ------------------------------
-      # Create GitHub Release
-      # ------------------------------
-      - name: Create GitHub Release
+      # This step uploads the CLI zip to the release created/managed by electron-builder.
+      # using softprops/action-gh-release (or similar) or reusing ncipollo but verifying it doesn't overwrite
+      - name: Upload CLI to Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          artifacts: all-artifacts/*.zip
+          allowUpdates: true
+          artifacts: artifacts/cli.zip
           token: ${{ secrets.GITHUB_TOKEN }}
-          generateReleaseNotes: false
-          replacesArtifacts: true
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
