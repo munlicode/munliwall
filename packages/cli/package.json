@@ -9,14 +9,11 @@
   },
   "pkg": {
     "scripts": "dist/cli.js",
-    "assets": [
-      "node_modules/sharp/**/*",
-      "../../node_modules/sharp/**/*"
-    ],
+    "assets": [],
     "outputPath": "dist"
   },
   "scripts": {
-    "build": "npx esbuild src/cli.ts --bundle --platform=node --format=cjs --outfile=dist/cli.js --external:sharp --external:wallpaper --external:electron",
+    "build": "npx esbuild src/cli.ts --bundle --platform=node --format=cjs --outfile=dist/cli.js --external:wallpaper --external:electron",
     "dev": "tsc --watch",
     "dist": "pnpm run build && pkg package.json --targets node18-linux-x64,node18-macos-x64,node18-win-x64 --out-dir dist"
   },

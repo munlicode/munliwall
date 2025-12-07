@@ -1,7 +1,7 @@
 import { ISource, Wallpaper } from '../types.js';
 import { readdir } from 'fs/promises';
 import { join, sep } from 'path';
-import sharp from 'sharp';
+import { imageSizeFromFile } from 'image-size/fromFile';
 
 export class LocalSource implements ISource {
   public name = 'local';
@@ -26,8 +26,19 @@ export class LocalSource implements ISource {
     const randomImage = images[Math.floor(Math.random() * images.length)];
     const fullPath = join(folderPath, randomImage);
 
-    // --- Get dimensions using sharp ---
-    const metadata = await sharp(fullPath).metadata();
+    // --- Get dimensions using image-size/fromFile ---
+    let width = 0;
+    let height = 0;
+    try {
+        const dimensions = await imageSizeFromFile(fullPath); // Use the correct async function
+        if (dimensions) {
+            width = dimensions.width ?? 0;
+            height = dimensions.height ?? 0;
+        }
+    } catch (error) {
+        // Ignore dimension errors, fallback to 0
+        console.error(`Failed to read dimensions for ${fullPath}`, error);
+    }
     // ----------------------------------
 
     const fileUrl = `file://${fullPath}`; // URL for local file access
@@ -43,8 +54,8 @@ export class LocalSource implements ISource {
       source: this.name,
       author: 'Unknown', // Author is generally not available for local files
       tags: [folderPath.split(sep).pop() || 'local'], // Use folder name as a tag
-      width: metadata.width ?? 0,
-      height: metadata.height ?? 0,
+      width,
+      height,
     };
   }
 }
