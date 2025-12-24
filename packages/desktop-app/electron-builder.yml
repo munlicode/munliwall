@@ -4,18 +4,18 @@ directories:
   buildResources: build
 files:
   - dist/**
-  - "!**/*.map"
-  - "!**/.vscode/*"
-  - "!src/*"
-  - "!electron.vite.config.{js,ts,mjs,cjs}"
-  - "!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}"
-  - "!{.env,.env.*,.npmrc,pnpm-lock.yaml}"
-  - "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
-  - "!node_modules/@munlicode/munliwall-core"
+  - '!**/*.map'
+  - '!**/.vscode/*'
+  - '!src/*'
+  - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
+  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+  - '!node_modules/@munlicode/munliwall-core'
 asarUnpack:
-  - "**/node_modules/sharp/**/*"
-  - "**/node_modules/@img/**/*"
-  - "**/node_modules/wallpaper/**/*"
+  - '**/node_modules/sharp/**/*'
+  - '**/node_modules/@img/**/*'
+  - '**/node_modules/wallpaper/**/*'
 extraResources:
   - from: dist/core/config.js
     to: core/config.js
@@ -27,13 +27,13 @@ linux:
   target:
     - AppImage
     - deb
-  maintainer: Nurzhan Murakhan <nurzhanmuratkhan@gmail.com>
+  maintainer: Nurzhan Murakhan <nurzhanmuratkhan@kreoza.com>
   synopsis: Desktop Wallpaper Application Suite
   description: A simple yet powerful tool to transform your workspace.
   category: Utility
   icon: build/icon.png
   desktop:
-    StartupNotify: "true"
+    StartupNotify: 'true'
 appImage:
   artifactName: ${productName}-${version}.${ext}
 snap:
@@ -61,3 +61,4 @@ publish:
   provider: github
   owner: munlicode
   repo: munliwall
+compression: maximum

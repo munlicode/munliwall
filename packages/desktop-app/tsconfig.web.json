@@ -12,10 +12,9 @@
     "composite": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
+    "noEmit": true,
     "paths": {
-      "@renderer/*": [
-        "src/renderer/src/*"
-      ]
+      "@renderer/*": ["src/renderer/src/*"]
     }
   }
 }

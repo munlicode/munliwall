@@ -1,46 +1,50 @@
-import { RandomOptions } from "../main/handlers/random.handlers";
+import { Wallpaper, Settings, SettingMeta, SettingInstance } from '@munlicode/munliwall-core'
+import { RandomOptions } from '../main/handlers/random.handlers'
 
 export interface BookmarksAPI {
-  list: () => Promise<any[]>;
-  add: (id: string) => Promise<any>;
-  remove: (id: string) => Promise<void>;
-  check: (id: string) => Promise<boolean>;
+  list: () => Promise<Wallpaper[]>
+  add: (id: string) => Promise<Wallpaper>
+  remove: (id: string) => Promise<void>
+  check: (id: string) => Promise<boolean>
 }
 
 export interface ConfigAPI {
-  show: () => Promise<any[]>;
-  get: (key: string) => Promise<{ key: string, value: any }>;
-  set: (key: string, value: string) => Promise<{ success: boolean }>;
+  show: () => Promise<SettingInstance<SettingMeta>[]>
+  get: <K extends keyof Settings>(key: K) => Promise<{ key: K; value: Settings[K] }>
+  set: (key: string, value: unknown) => Promise<{ success: boolean }>
 }
 
 export interface FavoritesAPI {
-  list: () => Promise<any[]>;
-  add: (id: string) => Promise<any>;
-  remove: (id: string) => Promise<void>;
-  check: (id: string) => Promise<boolean>;
+  list: () => Promise<Wallpaper[]>
+  add: (id: string) => Promise<Wallpaper>
+  remove: (id: string) => Promise<void>
+  check: (id: string) => Promise<boolean>
 }
 
 export interface HistoryAPI {
-  list: () => Promise<any[]>;
-  clear: () => Promise<void>;
-  delete: (id: string) => Promise<void>;
+  list: () => Promise<Wallpaper[]>
+  clear: () => Promise<void>
+  delete: (id: string) => Promise<void>
 }
 
 export interface RandomAPI {
-  set: (options?: RandomOptions) => Promise<any>;
+  set: (
+    options?: RandomOptions
+  ) => Promise<{ success: boolean; message: string; wallpaper?: Wallpaper }>
 }
 
 export interface SetAPI {
-  history: (id: string) => Promise<void>;
-  bookmark: (id: string) => Promise<void>;
-  favorite: (id: string) => Promise<void>;
+  history: (id: string) => Promise<void>
+  bookmark: (id: string) => Promise<void>
+  favorite: (id: string) => Promise<void>
 }
 
 export interface SourcesAPI {
-  list: () => Promise<any[]>;
+  list: () => Promise<string[]>
 }
 export interface currentWallpaper {
-  id: () => Promise<string>;
+  get: () => Promise<Wallpaper | null>
+  id: () => Promise<string | undefined>
   check: (id: string) => Promise<boolean>
 }
 
@@ -48,13 +52,13 @@ export interface currentWallpaper {
  * Defines the complete API exposed to the Renderer.
  */
 export interface IpcRendererApi {
-  bookmarks: BookmarksAPI;
-  config: ConfigAPI;
-  favorites: FavoritesAPI;
-  history: HistoryAPI;
-  random: RandomAPI;
-  set: SetAPI;
-  sources: SourcesAPI;
-  fetchAndSet: (query: { source: string, query: string }) => Promise<any>;
-  current: currentWallpaper;
+  bookmarks: BookmarksAPI
+  config: ConfigAPI
+  favorites: FavoritesAPI
+  history: HistoryAPI
+  random: RandomAPI
+  set: SetAPI
+  sources: SourcesAPI
+  fetchAndSet: (query: { source: string; query: string }) => Promise<Wallpaper>
+  current: currentWallpaper
 }

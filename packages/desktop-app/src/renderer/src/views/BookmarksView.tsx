@@ -1,12 +1,11 @@
-import React from 'react';
-import { WallpaperList } from '../components/WallpaperList';
+import React from 'react'
+import { WallpaperList } from '../components/WallpaperList'
 
 export const BookmarksView: React.FC = () => {
-
   return (
     <WallpaperList
       title="🔖 Bookmarks"
-      defaultMode='bookmark'
+      defaultMode="bookmark"
       fetchItems={window.wallpaperAPI.bookmarks.list}
       onAdd={window.wallpaperAPI.bookmarks.add}
       onRemove={window.wallpaperAPI.bookmarks.remove}
@@ -15,5 +14,5 @@ export const BookmarksView: React.FC = () => {
       checkIsCurrent={window.wallpaperAPI.current.check}
       checkIsFavorite={window.wallpaperAPI.favorites.check}
     />
-  );
-};
+  )
+}

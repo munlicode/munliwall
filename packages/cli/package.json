@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "A simple yet powerful tool designed to transform your workspace with ease. Wallpaper lets you effortlessly manage your desktop backgrounds — fetch new wallpapers by keyword, source, or category, schedule automatic updates, or quickly apply local images via the command line.",
-  "author": "Nurzhan Murakhan <nurzhanmuratkhan@gmail.com>",
+  "author": "Nurzhan Muratkhan <nurzhanmuratkhan@kreoza.com>",
   "bin": {
     "munliwall": "dist/cli.js"
   },
@@ -13,7 +13,7 @@
     "outputPath": "dist"
   },
   "scripts": {
-    "build": "npx esbuild src/cli.ts --bundle --platform=node --format=cjs --outfile=dist/cli.js --external:wallpaper --external:electron",
+    "build": "npx esbuild src/cli.ts --bundle --minify --platform=node --format=cjs --outfile=dist/cli.js --external:wallpaper --external:electron",
     "dev": "tsc --watch",
     "dist": "pnpm run build && pkg package.json --targets node18-linux-x64,node18-macos-x64,node18-win-x64 --out-dir dist"
   },

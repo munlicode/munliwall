@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { HomeView } from './views/HomeView';
-import { HistoryView } from './views/HistoryView';
-import { ConfigView } from './views/ConfigView';
-import { BookmarksView } from './views/BookmarksView';
-import { FavoritesView } from './views/FavoritesView';
+import React, { useState } from 'react'
+import { HomeView } from './views/HomeView'
+import { HistoryView } from './views/HistoryView'
+import { ConfigView } from './views/ConfigView'
+import { BookmarksView } from './views/BookmarksView'
+import { FavoritesView } from './views/FavoritesView'
 
 const routes: Record<string, React.FC> = {
   home: HomeView,
@@ -11,12 +11,12 @@ const routes: Record<string, React.FC> = {
   config: ConfigView,
   bookmarks: BookmarksView,
   favorites: FavoritesView
-};
+}
 
 const AppRouter: React.FC = () => {
-  const [currentRoute, setCurrentRoute] = useState<keyof typeof routes>('home');
+  const [currentRoute, setCurrentRoute] = useState<keyof typeof routes>('home')
 
-  const ActiveComponent = routes[currentRoute] || HomeView;
+  const ActiveComponent = routes[currentRoute] || HomeView
 
   return (
     <>
@@ -38,7 +38,7 @@ const AppRouter: React.FC = () => {
         <ActiveComponent />
       </main>
     </>
-  );
-};
+  )
+}
 
-export default AppRouter;
+export default AppRouter

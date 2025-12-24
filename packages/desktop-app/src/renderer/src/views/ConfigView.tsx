@@ -1,86 +1,75 @@
-import React, { useEffect, useState, useRef } from 'react';
-
-interface ConfigItem {
-  key: string;
-  description: string;
-  type: string;
-  choices: string[] | null;
-  currentValue: any;
-  defaultValue: any;
-}
+import React, { useEffect, useState, useRef } from 'react'
+import { SettingInstance, SettingMeta } from '@munlicode/munliwall-core'
 
 export const ConfigView: React.FC = () => {
-  const [configItems, setConfigItems] = useState<ConfigItem[]>([]);
-  const [statusMessage, setStatusMessage] = useState('Loading configuration data...');
-  const [statusColor, setStatusColor] = useState('blue');
-  const [loading, setLoading] = useState(true);
+  const [configItems, setConfigItems] = useState<SettingInstance<SettingMeta>[]>([])
+  const [statusMessage, setStatusMessage] = useState('Loading configuration data...')
+  const [statusColor, setStatusColor] = useState('blue')
+  const [loading, setLoading] = useState(true)
 
   // keep a reference to active timers for each key
-  const timers = useRef<Record<string, NodeJS.Timeout>>({});
+  const timers = useRef<Record<string, NodeJS.Timeout>>({})
 
   useEffect(() => {
-    const fetchConfig = async () => {
+    const fetchConfig = async (): Promise<void> => {
       try {
-        const result = await window.wallpaperAPI.config.show();
-        setConfigItems(result);
-        setStatusMessage('✅ Configuration loaded successfully.');
-        setStatusColor('green');
+        const result = await window.wallpaperAPI.config.show()
+        setConfigItems(result)
+        setStatusMessage('✅ Configuration loaded successfully.')
+        setStatusColor('green')
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Failed to load configuration.';
-        setStatusMessage(`❌ Error: ${message}`);
-        setStatusColor('red');
+        const message = error instanceof Error ? error.message : 'Failed to load configuration.'
+        setStatusMessage(`❌ Error: ${message}`)
+        setStatusColor('red')
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchConfig();
-  }, []);
+    fetchConfig()
+  }, [])
 
-  const handleChange = (item: ConfigItem, rawValue: any) => {
-    const { key, type } = item;
+  const handleChange = (item: SettingInstance<SettingMeta>, rawValue: string): void => {
+    const { key, type } = item
 
     // Convert the value to the correct type immediately
-    let newValue: any = rawValue;
-    if (type === 'number') newValue = Number(rawValue);
+    let newValue: string | number | boolean | Record<string, unknown> = rawValue
+    if (type === 'number') newValue = Number(rawValue)
 
     // update local UI immediately
     setConfigItems((prev) =>
-      prev.map((i) =>
-        i.key === key ? { ...i, currentValue: newValue } : i
-      )
-    );
+      prev.map((i) => (i.key === key ? { ...i, currentValue: newValue } : i))
+    )
 
     // Validate early: skip debounce if invalid
     if (!key || newValue === undefined || newValue === null) {
-      setStatusMessage(`❌ Cannot save ${key}: missing key or value`);
-      setStatusColor('red');
-      return;
+      setStatusMessage(`❌ Cannot save ${key}: missing key or value`)
+      setStatusColor('red')
+      return
     }
 
-    setStatusMessage(`⏳ Waiting to save ${key}...`);
-    setStatusColor('gray');
+    setStatusMessage(`⏳ Waiting to save ${key}...`)
+    setStatusColor('gray')
 
     // clear previous timer
-    if (timers.current[key]) clearTimeout(timers.current[key]);
+    if (timers.current[key]) clearTimeout(timers.current[key])
 
     // debounce save
-    timers.current[key] = setTimeout(async () => {
-      setStatusMessage(`Saving ${key}...`);
-      setStatusColor('orange');
+    timers.current[key] = setTimeout(async (): Promise<void> => {
+      setStatusMessage(`Saving ${key}...`)
+      setStatusColor('orange')
 
       try {
-        await window.wallpaperAPI.config.set(key, newValue);
-        setStatusMessage(`✅ Saved ${key}! New value: "${newValue}"`);
-        setStatusColor('green');
+        await window.wallpaperAPI.config.set(key, newValue)
+        setStatusMessage(`✅ Saved ${key}! New value: "${newValue}"`)
+        setStatusColor('green')
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error during save.';
-        setStatusMessage(`❌ Failed to save ${key}: ${message}`);
-        setStatusColor('red');
+        const message = error instanceof Error ? error.message : 'Unknown error during save.'
+        setStatusMessage(`❌ Failed to save ${key}: ${message}`)
+        setStatusColor('red')
       }
-    }, 5000);
-  };
-
+    }, 5000)
+  }
 
   return (
     <div style={{ padding: '1rem' }}>
@@ -95,7 +84,7 @@ export const ConfigView: React.FC = () => {
           style={{
             borderCollapse: 'collapse',
             width: '100%',
-            marginTop: '1rem',
+            marginTop: '1rem'
           }}
         >
           <thead>
@@ -115,7 +104,7 @@ export const ConfigView: React.FC = () => {
                 <td>
                   {item.choices && item.choices.length > 0 ? (
                     <select
-                      value={item.currentValue}
+                      value={String(item.currentValue)}
                       onChange={(e) => handleChange(item, e.target.value)}
                     >
                       {item.choices.map((choice) => (
@@ -130,7 +119,7 @@ export const ConfigView: React.FC = () => {
                       value={
                         typeof item.currentValue === 'object' && item.currentValue !== null
                           ? JSON.stringify(item.currentValue, null, 2)
-                          : item.currentValue
+                          : String(item.currentValue)
                       }
                       onChange={(e) => handleChange(item, e.target.value)}
                     />
@@ -148,5 +137,5 @@ export const ConfigView: React.FC = () => {
 
       <p style={{ color: statusColor, marginTop: '15px' }}>{statusMessage}</p>
     </div>
-  );
-};
+  )
+}
