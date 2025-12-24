@@ -1,7 +1,8 @@
 import { getAndSetWallpaper, type FetchQuery } from '@munlicode/munliwall-core'
 import { ipcMain } from 'electron'
 
-export function registerWallpaperHandlers() {
+export function registerWallpaperHandlers(): void {
+  console.log('📡 Registering wallpaper handlers...')
   ipcMain.handle(
     'wallpaper:fetchAndSet',
     async (_event, { source, query }: { source: string; query: string }) => {

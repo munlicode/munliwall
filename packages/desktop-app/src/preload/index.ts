@@ -33,6 +33,7 @@ function buildApi(
         const ipcChannel = `wallpaper:${channel}`
 
         namespaceObj[action] = (...args: unknown[]) => {
+          console.log(`[PRELOAD] Invoking: ${ipcChannel}`)
           return ipcRenderer.invoke(ipcChannel, ...args)
         }
       })

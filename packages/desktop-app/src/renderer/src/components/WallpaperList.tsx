@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { Wallpaper } from '@munlicode/munliwall-core'
 import { handleSet, WallpaperMode } from '../shared/wallpapers'
+import { ConfirmModal } from './ConfirmModal'
 
 interface WallpaperListProps {
   title: string
   defaultMode: WallpaperMode
-  fetchItems: () => Promise<{ id: string }[]>
+  fetchItems: () => Promise<Wallpaper[]>
   onRemove?: (id: string) => Promise<void>
   allowAdd?: boolean
   onAdd?: (id: string) => Promise<unknown>
@@ -32,7 +34,7 @@ export const WallpaperList: React.FC<WallpaperListProps> = ({
   const checkFavorite = normalize(checkIsFavorite)
   const checkBookmarked = normalize(checkIsBookmarked)
 
-  const [items, setItems] = useState<{ id: string }[]>([])
+  const [items, setItems] = useState<Wallpaper[]>([])
   const [loading, setLoading] = useState(true)
   const [newId, setNewId] = useState('')
   const [mode] = useState<WallpaperMode>(defaultMode)
@@ -50,6 +52,21 @@ export const WallpaperList: React.FC<WallpaperListProps> = ({
     >
   >({})
 
+  // Modal state
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean
+    title: string
+    message: string
+    onConfirm: () => void
+    type: 'danger' | 'info'
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => {},
+    type: 'info'
+  })
+
   const setStatus = (msg: string, color?: string): void => {
     setStatusMessage(msg)
     if (color) setStatusColor(color)
@@ -65,15 +82,17 @@ export const WallpaperList: React.FC<WallpaperListProps> = ({
     const newPreviews: Record<string, string | null> = {}
 
     await Promise.all(
-      data.map(async (item) => {
-        const [isCurrent, isFavorite, isBookmarked, thumb] = await Promise.all([
+      data.map(async (item: Wallpaper) => {
+        const [isCurrent, isFavorite, isBookmarked, cachedThumb] = await Promise.all([
           checkCurrent(item.id),
           checkFavorite(item.id),
           checkBookmarked(item.id),
           window.wallpaperAPI.cache.get(item.id)
         ])
         newStatuses[item.id] = { isCurrent, isFavorite, isBookmarked }
-        newPreviews[item.id] = thumb
+        // Fallback to remote URL if not in cache
+        newPreviews[item.id] =
+          cachedThumb || (item.urls ? item.urls.small || item.urls.regular : null)
       })
     )
 
@@ -96,33 +115,69 @@ export const WallpaperList: React.FC<WallpaperListProps> = ({
 
   const handleRemoveClick = async (id: string): Promise<void> => {
     if (!onRemove) return
-    await onRemove(id)
-    refresh()
+    setConfirmModal({
+      isOpen: true,
+      title: 'Remove Wallpaper',
+      message: `Are you sure you want to remove ${id} from your ${title.toLowerCase()}?`,
+      type: 'danger',
+      onConfirm: async (): Promise<void> => {
+        await onRemove(id)
+        refresh()
+      }
+    })
   }
 
   const handleFavoriteToggle = async (id: string, isFav: boolean): Promise<void> => {
-    try {
-      setStatus(`${isFav ? 'Removing' : 'Adding'} favorite...`)
-      if (isFav) await window.wallpaperAPI.favorites.remove(id)
-      else await window.wallpaperAPI.favorites.add(id)
-      setStatus(isFav ? 'Removed from favorites.' : 'Added to favorites.', 'green')
-      await refresh()
-    } catch (e) {
-      setStatus('Failed to toggle favorite.', 'red')
-      console.error(e)
+    const action = async (): Promise<void> => {
+      try {
+        setStatus(`${isFav ? 'Removing' : 'Adding'} favorite...`)
+        if (isFav) await window.wallpaperAPI.favorites.remove(id)
+        else await window.wallpaperAPI.favorites.add(id)
+        setStatus(isFav ? 'Removed from favorites.' : 'Added to favorites.', 'green')
+        await refresh()
+      } catch (e) {
+        setStatus('Failed to toggle favorite.', 'red')
+        console.error(e)
+      }
+    }
+
+    if (isFav) {
+      setConfirmModal({
+        isOpen: true,
+        title: 'Unfavorite',
+        message: 'Remove this wallpaper from your favorites?',
+        type: 'danger',
+        onConfirm: action
+      })
+    } else {
+      action()
     }
   }
 
   const handleBookmarkToggle = async (id: string, isBookmarked: boolean): Promise<void> => {
-    try {
-      setStatus(`${isBookmarked ? 'Removing' : 'Adding'} bookmark...`)
-      if (isBookmarked) await window.wallpaperAPI.bookmarks.remove(id)
-      else await window.wallpaperAPI.bookmarks.add(id)
-      setStatus(isBookmarked ? 'Removed from bookmarks.' : 'Added to bookmarks.', 'green')
-      await refresh()
-    } catch (e) {
-      setStatus('Failed to toggle bookmark.', 'red')
-      console.error(e)
+    const action = async () => {
+      try {
+        setStatus(`${isBookmarked ? 'Removing' : 'Adding'} bookmark...`)
+        if (isBookmarked) await window.wallpaperAPI.bookmarks.remove(id)
+        else await window.wallpaperAPI.bookmarks.add(id)
+        setStatus(isBookmarked ? 'Removed from bookmarks.' : 'Added to bookmarks.', 'green')
+        await refresh()
+      } catch (e) {
+        setStatus('Failed to toggle bookmark.', 'red')
+        console.error(e)
+      }
+    }
+
+    if (isBookmarked) {
+      setConfirmModal({
+        isOpen: true,
+        title: 'Unbookmark',
+        message: 'Remove this wallpaper from your bookmarks?',
+        type: 'danger',
+        onConfirm: action
+      })
+    } else {
+      action()
     }
   }
 
@@ -192,7 +247,7 @@ export const WallpaperList: React.FC<WallpaperListProps> = ({
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'record(auto-fill, minmax(280px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
             gap: '1.5rem'
           }}
         >
@@ -387,14 +442,27 @@ export const WallpaperList: React.FC<WallpaperListProps> = ({
         </div>
       )}
 
+      {confirmModal.isOpen && (
+        <ConfirmModal
+          isOpen={confirmModal.isOpen}
+          title={confirmModal.title}
+          message={confirmModal.message}
+          type={confirmModal.type}
+          onConfirm={confirmModal.onConfirm}
+          onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+        />
+      )}
+
       {statusMessage && (
         <div
           style={{
             position: 'fixed',
             bottom: '2rem',
             right: '2rem',
-            background: statusColor === 'red' ? '#fee2e2' : statusColor === 'green' ? '#dcfce7' : 'white',
-            color: statusColor === 'red' ? '#991b1b' : statusColor === 'green' ? '#166534' : '#1e3a8a',
+            background:
+              statusColor === 'red' ? '#fee2e2' : statusColor === 'green' ? '#dcfce7' : 'white',
+            color:
+              statusColor === 'red' ? '#991b1b' : statusColor === 'green' ? '#166534' : '#1e3a8a',
             padding: '1rem 1.5rem',
             borderRadius: '12px',
             boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
