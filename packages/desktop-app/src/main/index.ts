@@ -1,4 +1,4 @@
-process.on('unhandledRejection', (reason, _promise) => {
+process.on('unhandledRejection', (reason) => {
   console.error('Unhandled Rejection:', reason)
 })
 
@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 const preloadPath = path.join(__dirname, '../preload/index.js')
 
-function createWindow() {
+function createWindow(): void {
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -31,8 +31,9 @@ function createWindow() {
     }
   })
   if (process.env.NODE_ENV === 'development') {
-    console.info('Starting Dev Sever')
-    win.loadURL(process.env.VITE_DEV_SERVER_URL!)
+    console.info('Starting Dev Server')
+    const devUrl = process.env.VITE_DEV_SERVER_URL || 'http://localhost:5173'
+    win.loadURL(devUrl)
   } else {
     console.info('Starting Production Server')
     win.loadFile(path.join(currentDir, '../renderer/index.html'))
