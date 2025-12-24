@@ -17,6 +17,7 @@ export {
   getCurrentWallpaper,
   deleteHistoryById
 } from './database.js'
+export { getCacheDir, getCachedImagePath, cacheImage, cleanupCache } from './cache.js'
 export { sourceRegistry } from './sources/index.js'
 export {
   setCustomDataPath,
@@ -50,6 +51,7 @@ import { FetchQuery, Wallpaper } from './types.js'
 import { tmpdir } from 'os'
 import { join } from 'path'
 import { getDataPath } from './config.js'
+import { getCachedImagePath, cacheImage } from './cache.js'
 
 const dataPath = getDataPath()
 const FINAL_WALLPAPER_PATH = join(dataPath, 'current.jpg')
@@ -94,15 +96,22 @@ export async function getAndSetWallpaper(query: FetchQuery): Promise<Wallpaper> 
     let dimensions: { width: number; height: number } | undefined
 
     try {
-      // 1. Download the image to the TEMP path
-      const optimalUrl = await selectOptimalUrl(candidate)
+      // 1. Try to get from cache first
+      const cachedPath = await getCachedImagePath(candidate.id)
 
-      if (optimalUrl.startsWith('file://')) {
-        const localPath = decodeURIComponent(optimalUrl.replace('file://', ''))
-        // If it's already local, we can just copy it to the temp path for checks
-        fs.copyFileSync(localPath, tempCandidatePath)
+      if (cachedPath) {
+        console.log(`📦 Found ${candidate.id} in cache.`)
+        fs.copyFileSync(cachedPath, tempCandidatePath)
       } else {
-        await downloadImage(optimalUrl, tempCandidatePath) // Pass the temp path
+        const optimalUrl = await selectOptimalUrl(candidate)
+
+        if (optimalUrl.startsWith('file://')) {
+          const localPath = decodeURIComponent(optimalUrl.replace('file://', ''))
+          // If it's already local, we can just copy it to the temp path for checks
+          fs.copyFileSync(localPath, tempCandidatePath)
+        } else {
+          await downloadImage(optimalUrl, tempCandidatePath) // Pass the temp path
+        }
       }
 
       // 2. Read the file from the TEMP path
@@ -124,6 +133,10 @@ export async function getAndSetWallpaper(query: FetchQuery): Promise<Wallpaper> 
       if (!screenResolution) {
         console.log('No screen resolution detected. Accepting first image.')
         wallpaper = candidate
+
+        // Cache it
+        await cacheImage(candidate.id, tempCandidatePath)
+
         // --- KEY CHANGE 2: Move the good file to the FINAL path ---
         fs.renameSync(tempCandidatePath, FINAL_WALLPAPER_PATH)
         finalLocalPath = FINAL_WALLPAPER_PATH

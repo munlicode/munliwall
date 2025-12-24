@@ -42,6 +42,9 @@ export interface SetAPI {
 export interface SourcesAPI {
   list: () => Promise<string[]>
 }
+export interface CacheAPI {
+  get: (id: string) => Promise<string | null>
+}
 export interface currentWallpaper {
   get: () => Promise<Wallpaper | null>
   id: () => Promise<string | undefined>
@@ -61,4 +64,5 @@ export interface IpcRendererApi {
   sources: SourcesAPI
   fetchAndSet: (query: { source: string; query: string }) => Promise<Wallpaper>
   current: currentWallpaper
+  cache: CacheAPI
 }

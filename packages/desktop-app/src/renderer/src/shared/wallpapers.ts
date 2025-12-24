@@ -4,8 +4,9 @@ export const handleSet = async (
   mode: WallpaperMode,
   setStatusMessage: (msg: string) => void,
   setStatusColor: (color: string) => void,
-  setNewBookmarkId: (id: string) => void
-) => {
+  setNewBookmarkId: (id: string) => void,
+  onFinish?: () => void
+): Promise<void> => {
   if (!wallpaperId.trim()) {
     setStatusMessage('⚠️ Please enter an ID to set wallpaper.')
     setStatusColor('orange')
@@ -29,6 +30,7 @@ export const handleSet = async (
     setStatusMessage(`✅ Wallpaper set successfully: ${wallpaperId}!`)
     setStatusColor('green')
     setNewBookmarkId('')
+    if (onFinish) onFinish()
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     setStatusMessage(`❌ Failed to set wallpaper: ${message}`)

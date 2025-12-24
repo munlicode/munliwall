@@ -10,7 +10,8 @@ const IPC_STRUCTURE = {
   set: ['history', 'bookmark', 'favorite'],
   sources: ['list'],
   fetchAndSet: null,
-  current: ['get', 'id', 'check']
+  current: ['get', 'id', 'check'],
+  cache: ['get']
 }
 
 const api: Partial<IpcRendererApi> = {}
