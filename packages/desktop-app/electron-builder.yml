@@ -31,7 +31,7 @@ linux:
   synopsis: Desktop Wallpaper Application Suite
   description: A simple yet powerful tool to transform your workspace.
   category: Utility
-  icon: build/icon.png
+  icon: build/icons
   desktop:
     StartupNotify: 'true'
 appImage:

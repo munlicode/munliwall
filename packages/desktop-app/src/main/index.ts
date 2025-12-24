@@ -12,6 +12,7 @@ import { startWallpaperService } from '@munlicode/munliwall-core'
 import { registerIPCHandlers } from './handlers/index.js'
 import { createMenu } from './menu.js'
 import path from 'path'
+import icon from '../../resources/icon.png?asset'
 
 const currentDir = __dirname
 const projectRoot = path.join(currentDir, '../../../../')
@@ -25,11 +26,19 @@ function createWindow(): void {
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
+    show: false,
+    autoHideMenuBar: true,
+    ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: preloadPath,
       sandbox: false
     }
   })
+
+  win.on('ready-to-show', () => {
+    win.show()
+  })
+
   if (process.env.NODE_ENV === 'development') {
     console.info('Starting Dev Server')
     const devUrl = process.env.VITE_DEV_SERVER_URL || 'http://localhost:5173'
