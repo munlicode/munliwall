@@ -155,7 +155,7 @@ export const WallpaperList: React.FC<WallpaperListProps> = ({
   }
 
   const handleBookmarkToggle = async (id: string, isBookmarked: boolean): Promise<void> => {
-    const action = async () => {
+    const action = async (): Promise<void> => {
       try {
         setStatus(`${isBookmarked ? 'Removing' : 'Adding'} bookmark...`)
         if (isBookmarked) await window.wallpaperAPI.bookmarks.remove(id)

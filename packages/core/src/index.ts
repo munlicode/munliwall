@@ -197,10 +197,18 @@ export async function getAndSetWallpaper(query: FetchQuery): Promise<Wallpaper> 
   }
 
   // 8. Set the wallpaper and save to history
-  await setWallpaper(finalLocalPath)
+  // Use FINAL_WALLPAPER_PATH for the set command but we should consider
+  // that DEs might not refresh if path is identical.
+  // Actually, we already have it in FINAL_WALLPAPER_PATH now.
+  // To ensure refresh, we can try to set it from the cachedPath if we have it.
+  const cachedPath = await getCachedImagePath(wallpaper.id)
+  const pathToSet = cachedPath || finalLocalPath
+
+  console.log(`🎨 Setting wallpaper to: ${pathToSet}`)
+  await setWallpaper(pathToSet)
   await addToHistory(wallpaper)
 
-  console.log(`Successfully set wallpaper from: ${wallpaper.source}`)
+  console.log(`✅ Successfully set wallpaper from: ${wallpaper.source}`)
   return wallpaper
 }
 /**
@@ -210,43 +218,58 @@ export async function getAndSetWallpaper(query: FetchQuery): Promise<Wallpaper> 
 export async function setWallpaperFromList(
   id: string,
   wallpaperList: Wallpaper[],
-  listName: string // For logging (e.g., "History", "Bookmarks")
+  listName: string
 ): Promise<void> {
   console.log(`Searching ${listName} for ID: ${id}...`)
 
   const wallpaper = wallpaperList.find((item) => item.id === id)
 
-  // --- 1. Find the wallpaper ---
   if (!wallpaper) {
     console.error(`❌ Wallpaper with ID '${id}' not found in ${listName}.`)
     return
   }
 
-  // --- 2. Get the URL ---
-  // Use the best URL you have, probably 'full' or 'raw'
-  const url = wallpaper.urls?.full
-  if (!url) {
-    console.error(`❌ Wallpaper ${id} (from ${listName}) has no URL to download.`)
-    return
-  }
-
   try {
-    // --- 3. Download it to the FINAL path ---
-    // Since we *know* this is the image we want, we can
-    // download it directly to the final destination.
-    console.log(`Downloading from ${url}...`)
-    await downloadImage(url, FINAL_WALLPAPER_PATH)
+    // 1. Check cache first
+    let setPath = await getCachedImagePath(id)
 
-    // --- 4. Set the wallpaper ---
-    // Now tell the OS to use the file we just downloaded.
-    console.log('Setting wallpaper...')
-    await setWallpaper(FINAL_WALLPAPER_PATH)
+    if (setPath) {
+      console.log(`📦 Found ${id} in cache. Using it.`)
+    } else {
+      const url = wallpaper.urls?.full || wallpaper.urls?.regular
+      if (!url) {
+        throw new Error(`Wallpaper ${id} has no valid URL.`)
+      }
+
+      console.log(`📥 Downloading wallpaper for cache: ${id}...`)
+      const tempPath = join(tmpdir(), `munliwall-tmp-${id}.jpg`)
+      await downloadImage(url, tempPath)
+
+      // Move to cache
+      setPath = await cacheImage(id, tempPath)
+
+      // cleanup temp if it's different from setPath
+      if (fs.existsSync(tempPath) && tempPath !== setPath) {
+        fs.unlinkSync(tempPath)
+      }
+    }
+
+    // 2. Also update current.jpg for compatibility/fallback
+    if (setPath && fs.existsSync(setPath)) {
+      fs.copyFileSync(setPath, FINAL_WALLPAPER_PATH)
+    }
+
+    // 3. Set the wallpaper
+    // We use setPath (cached path) because it's unique per image,
+    // which helps Linux DEs (like GNOME) realize the wallpaper changed.
+    console.log(`🎨 Setting wallpaper to: ${setPath}`)
+    await setWallpaper(setPath || FINAL_WALLPAPER_PATH)
 
     await addToHistory(wallpaper)
     console.log(`✅ Successfully set wallpaper ${id} from ${listName}.`)
-    console.log(`   Source: ${wallpaper.source || 'Unknown'}`)
   } catch (err) {
-    console.error(`Failed to download or set wallpaper ${id}.`, err)
+    console.error(`❌ Failed to set wallpaper ${id} from list:`, err)
+    throw err
   }
 }
 /**
