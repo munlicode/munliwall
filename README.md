@@ -37,7 +37,7 @@ You can download the latest version of the desktop application from the [Release
     ```bash
     sudo snap install munliwall-x.x.x.snap --dangerous
     ```
-    *(Note: The `--dangerous` flag is required because the package is installed locally and not verified by the Snap Store signature).*
+    _(Note: The `--dangerous` flag is required because the package is installed locally and not verified by the Snap Store signature)._
 
 ### CLI Tool
 
@@ -69,25 +69,37 @@ mv munliwall-cli-linux munliwall # Replace with your OS's binary name if not Lin
 # Move to a directory in your PATH (requires administrator/root privileges)
 sudo mv munliwall /usr/local/bin/
 ```
+
 Now you can simply type `munliwall` in any terminal to run the CLI:
+
 ```bash
 munliwall --help
 ```
 
 **Example Commands:**
 
-*   **Set a random wallpaper:**
-    ```bash
-    munliwall random
-    ```
-*   **Set a wallpaper from a specific source (e.g., Unsplash):**
-    ```bash
-    munliwall set --source unsplash --query "nature"
-    ```
-*   **List history:**
-    ```bash
-    munliwall history
-    ```
+- **Set a random wallpaper:**
+  ```bash
+  munliwall random
+  ```
+- **Set a wallpaper from a specific source (e.g., Unsplash):**
+  ```bash
+  munliwall set --source unsplash --query "nature"
+  ```
+- **List history:**
+  ```bash
+  munliwall history
+  ```
+
+## Updating
+
+To update `munliwall` to the latest version, simply download the new release and install it. **Your data and settings will be preserved.**
+
+- **AppImage:** Download the new AppImage and make it executable. **Cleanup:** You can safely delete the old `.AppImage` file to free up disk space. Your data is stored separately in your configuration folder and will not be lost.
+- **Debian (.deb):** Install the new `.deb` package: `sudo dpkg -i munliwall-x.x.x.deb`. The system automatically replaces the old version, so no manual cleanup is required.
+- **Snap:** Install the new `.snap` package: `sudo snap install munliwall-x.x.x.snap --dangerous`. This upgrades the existing installation automatically.
+
+All user data is stored in your system's configuration folder (typically `~/.config/munliwall`) and remains safe during updates.
 
 ## Development
 

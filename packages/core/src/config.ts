@@ -20,7 +20,7 @@ export interface Settings {
 
 const defaults: Settings = {
   // Default path for the db.json and downloaded images
-  dataPath: join(homedir(), '.wallpaper-tool'),
+  dataPath: join(homedir(), '.munliwall'),
   defaultSource: 'nekos',
   historyLength: 50,
   autoChangeInterval: 0,
@@ -99,8 +99,9 @@ export const settingsMeta: SettingsMetaMap = {
   }
 }
 
+// NOTE: projectName: 'munliwall' means config is stored in ~/.config/munliwall
 export const config = new Conf<Settings>({
-  projectName: 'wallpaper-tool',
+  projectName: 'munliwall',
   defaults: defaults
 })
 
@@ -118,11 +119,48 @@ export function getDataPath(): string {
 }
 
 /**
+ * Migrates old data from .wallpaper-tool and ~/.config/wallpaper-tool
+ * to the new 'munliwall' locations if they exist.
+ */
+async function migrateLegacyData(): Promise<void> {
+  // 1. Migrate Main Data Directory (~/.wallpaper-tool -> ~/.munliwall)
+  const oldDataPath = join(homedir(), '.wallpaper-tool')
+  const newDataPath = join(homedir(), '.munliwall')
+
+  if (fs.existsSync(oldDataPath) && !fs.existsSync(newDataPath)) {
+    console.log(`Migrating data from ${oldDataPath} to ${newDataPath}`)
+    try {
+      await fsp.rename(oldDataPath, newDataPath)
+    } catch (error) {
+      console.error('Failed to migrate data directory:', error)
+    }
+  }
+
+  // 2. Migrate Config Directory (~/.config/wallpaper-tool -> ~/.config/munliwall)
+  const oldConfigPath = join(homedir(), '.config', 'wallpaper-tool')
+  const newConfigPath = join(homedir(), '.config', 'munliwall')
+
+  if (fs.existsSync(oldConfigPath) && !fs.existsSync(newConfigPath)) {
+    console.log(`Migrating config from ${oldConfigPath} to ${newConfigPath}`)
+    try {
+      // Ensure parent of new config exists (likely .config)
+      await fsp.mkdir(dirname(newConfigPath), { recursive: true })
+      await fsp.rename(oldConfigPath, newConfigPath)
+    } catch (error) {
+      console.error('Failed to migrate config directory:', error)
+    }
+  }
+}
+
+/**
  * Ensures the database is loaded from the file.
  * Call this before any db operation.
  */
 export async function getDb(): Promise<Low<AppData>> {
   if (db === null) {
+    // Attempt migration before initializing standard paths
+    await migrateLegacyData()
+
     const dataPath = getDataPath()
     const dbPath = join(dataPath, 'db.json')
     const dbDir = dirname(dbPath)

@@ -1,6 +1,6 @@
 {
   "name": "@munlicode/munliwall-cli",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "description": "A simple yet powerful tool designed to transform your workspace with ease. Wallpaper lets you effortlessly manage your desktop backgrounds — fetch new wallpapers by keyword, source, or category, schedule automatic updates, or quickly apply local images via the command line.",
   "author": "Nurzhan Muratkhan <nurzhanmuratkhan@kreoza.com>",
