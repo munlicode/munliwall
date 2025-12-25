@@ -2,6 +2,12 @@
 
 A simple yet powerful tool designed to transform your workspace with ease. `munliwall` lets you effortlessly manage your desktop backgrounds — download stunning wallpapers, upload your own creations, or update your setup automatically.
 
+## Demo
+
+<video src="docs/demo.mp4" controls="controls" style="max-width: 100%;">
+  Your browser does not support the video tag.
+</video>
+
 ## Installation
 
 ### Desktop Application (Linux)
