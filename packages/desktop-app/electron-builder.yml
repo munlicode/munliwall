@@ -20,10 +20,7 @@ extraResources:
   - from: dist/core/config.js
     to: core/config.js
 
-  - from: resources
-    to: .
-    filter:
-      - '**/*'
+  - resources/**
 executableName: munliwall
 
 linux:
@@ -34,7 +31,7 @@ linux:
   synopsis: Desktop Wallpaper Application Suite
   description: A simple yet powerful tool to transform your workspace.
   category: Utility
-  icon: resources/icon.png
+  icon: build/icon.png
   desktop:
     StartupNotify: 'true'
 appImage:

@@ -24,7 +24,7 @@ const preloadPath = path.join(__dirname, '../preload/index.js')
 function getIconPath(): string {
   if (app.isPackaged) {
     // In production, extraResources copies resources/ directly to the resources folder
-    return path.join(process.resourcesPath, 'icon.png')
+    return path.join(process.resourcesPath, 'resources/icon.png')
   }
   // In development, resolve relative to this file
   return path.join(__dirname, '../../resources/icon.png')

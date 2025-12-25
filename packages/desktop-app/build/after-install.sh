@@ -15,3 +15,17 @@ fi
 if [ -f "$APP_PATH/munliwall" ]; then
     ln -sf "$APP_PATH/munliwall" /usr/bin/munliwall
 fi
+
+# Update desktop info and icon cache so the system sees the new app immediately
+if [ -x "$(command -v update-desktop-database)" ]; then
+  update-desktop-database /usr/share/applications || true
+fi
+
+if [ -x "$(command -v gtk-update-icon-cache)" ]; then
+  gtk-update-icon-cache -f -t /usr/share/icons/hicolor || true
+fi
+
+# Fallback: Copy icon to pixmaps for broader compatibility
+if [ -f "/usr/share/icons/hicolor/1024x1024/apps/munliwall.png" ]; then
+    cp "/usr/share/icons/hicolor/1024x1024/apps/munliwall.png" "/usr/share/pixmaps/munliwall.png"
+fi
