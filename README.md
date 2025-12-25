@@ -5,6 +5,10 @@ A simple yet powerful tool designed to transform your workspace with ease. `munl
 ## Demo
 
 
+https://github.com/user-attachments/assets/1b2c2b4d-b964-44dc-b12e-b056c7c07cea
+
+
+
 ## Installation
 
 ### Desktop Application (Linux)
