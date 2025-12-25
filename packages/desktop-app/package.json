@@ -1,9 +1,9 @@
 {
   "name": "@munlicode/munliwall-desktop",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A simple yet powerful tool designed to transform your workspace with ease. Wallpaper lets you effortlessly manage your desktop backgrounds — download stunning wallpapers, upload your own creations, or update your setup automatically.",
   "author": "Nurzhan Muratkhan <nurzhanmuratkhan@kreoza.com>",
-  "homepage": "https://github.com/munlicode/munliwall",
+  "homepage": "https://github.com/m`unlicode/munliwall",
   "main": "dist/main/index.js",
   "scripts": {
     "format": "prettier --write .",
