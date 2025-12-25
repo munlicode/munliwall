@@ -2464,8 +2464,8 @@ packages:
   delegates@1.0.0:
     resolution: {integrity: sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==}
 
-  desktop-screenshot@git+https://github.com/schipiga/node-desktop-screenshot.git#ddc5a54e3342722ecb7f98f980fd00743f07852f:
-    resolution: {commit: ddc5a54e3342722ecb7f98f980fd00743f07852f, repo: git+https://github.com/schipiga/node-desktop-screenshot.git, type: git}
+  desktop-screenshot@https://github.com/schipiga/node-desktop-screenshot.git#ddc5a54e3342722ecb7f98f980fd00743f07852f:
+    resolution: {commit: ddc5a54e3342722ecb7f98f980fd00743f07852f, repo: https://github.com/schipiga/node-desktop-screenshot.git, type: git}
     version: 0.1.1
 
   detect-libc@2.1.2:
@@ -7986,7 +7986,7 @@ snapshots:
 
   delegates@1.0.0: {}
 
-  desktop-screenshot@git+https://github.com/schipiga/node-desktop-screenshot.git#ddc5a54e3342722ecb7f98f980fd00743f07852f:
+  desktop-screenshot@https://github.com/schipiga/node-desktop-screenshot.git#ddc5a54e3342722ecb7f98f980fd00743f07852f:
     dependencies:
       jimp: 0.2.28
     transitivePeerDependencies:
@@ -10749,7 +10749,7 @@ snapshots:
 
   screen-resolution@1.0.0:
     dependencies:
-      desktop-screenshot: git+https://github.com/schipiga/node-desktop-screenshot.git#ddc5a54e3342722ecb7f98f980fd00743f07852f
+      desktop-screenshot: https://github.com/schipiga/node-desktop-screenshot.git#ddc5a54e3342722ecb7f98f980fd00743f07852f
       lodash: 4.17.21
       pngjs: 3.4.0
       temp: 0.8.4
