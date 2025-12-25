@@ -4,7 +4,7 @@ A simple yet powerful tool designed to transform your workspace with ease. `munl
 
 ## Demo
 
-<video src="docs/demo.mp4" controls="controls" style="max-width: 100%;">
+<video src="https://github.com/munlicode/munliwall/raw/main/docs/demo.mp4" controls="controls" style="max-width: 100%;">
   Your browser does not support the video tag.
 </video>
 
