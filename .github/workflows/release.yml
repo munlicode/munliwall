@@ -65,16 +65,18 @@ jobs:
           zip -r ../../../artifacts/cli.zip munliwall-cli-*
 
       # ------------------------------
-      # Upload Snap and CLI Artifacts to Release
+      # Upload Artifacts to Release
       # ------------------------------
-      - name: Upload Snap and CLI to Release
+      - name: Upload CLI and Desktop Artifacts
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.ref_name }}
           allowUpdates: true
-          # electron-builder uploads AppImage and Deb. Add Snap and CLI zip here.
+          # We manually upload the desktop artifacts because electron-builder sometimes
+          # skips uploading if it detects a state mismatch (draft vs published).
           artifacts: |
-            dist/munliwall-*-x64.snap
+            packages/desktop-app/dist/*.AppImage
+            packages/desktop-app/dist/*.deb
             artifacts/cli.zip
           token: ${{ secrets.GITHUB_TOKEN }}
           omitBodyDuringUpdate: true
