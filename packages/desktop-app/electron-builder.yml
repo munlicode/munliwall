@@ -27,11 +27,11 @@ linux:
   target:
     - AppImage
     - deb
-  maintainer: Nurzhan Murakhan <nurzhanmuratkhan@kreoza.com>
+  maintainer: Nurzhan Muratkhan <nurzhanmuratkhan@kreoza.com>
   synopsis: Desktop Wallpaper Application Suite
   description: A simple yet powerful tool to transform your workspace.
   category: Utility
-  icon: build/icons
+  icon: build/icon.png
   desktop:
     StartupNotify: 'true'
 appImage:
