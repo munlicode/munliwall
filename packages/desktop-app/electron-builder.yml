@@ -20,7 +20,10 @@ extraResources:
   - from: dist/core/config.js
     to: core/config.js
 
-  - resources/**
+  - from: resources
+    to: .
+    filter:
+      - '**/*'
 executableName: munliwall
 
 linux:

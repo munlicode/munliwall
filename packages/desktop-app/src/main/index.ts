@@ -12,7 +12,6 @@ import { startWallpaperService } from '@munlicode/munliwall-core'
 import { registerIPCHandlers } from './handlers/index.js'
 import { createMenu } from './menu.js'
 import path from 'path'
-import icon from '../../resources/icon.png?asset'
 
 const currentDir = __dirname
 const projectRoot = path.join(currentDir, '../../../../')
@@ -22,13 +21,22 @@ if (process.env.NODE_ENV === 'development') {
 }
 const preloadPath = path.join(__dirname, '../preload/index.js')
 
+function getIconPath(): string {
+  if (app.isPackaged) {
+    // In production, extraResources copies resources/ directly to the resources folder
+    return path.join(process.resourcesPath, 'icon.png')
+  }
+  // In development, resolve relative to this file
+  return path.join(__dirname, '../../resources/icon.png')
+}
+
 function createWindow(): void {
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    icon: getIconPath(),
     webPreferences: {
       preload: preloadPath,
       sandbox: false
