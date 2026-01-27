@@ -1,6 +1,11 @@
 # munliwall
 
 A simple yet powerful tool designed to transform your workspace with ease. `munliwall` lets you effortlessly manage your desktop backgrounds — download stunning wallpapers, upload your own creations, or update your setup automatically.
+## Why
+I had 3 things that made me create it:
+- **Curiousity about desktop apps:** I wonder on how does one is built and what can it be.
+- **Custom Wallpapers:** Sometimes I want something else, not just recommened Debian wallpapers, so I decided to use API(mostly nekos, because I do not use other yet.).
+- **Simplification:** It was a friction to manually download and update my desktop's wallpaper looking for right wallpaper and resolution.
 
 ## Demo
 
